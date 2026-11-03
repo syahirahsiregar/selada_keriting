@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SeladaDar - Smart Farming Selada</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <h2>🌿 SeladaDar</h2>
+            <p>MONITORING SYSTEM</p>
+        </div>
+
+        <nav>
+            <a href="#dashboard" class="menu active">Dashboard</a>
+            <a href="#monitoring" class="menu">Monitoring</a>
+            <a href="#prediksi" class="menu">Prediksi AI</a>
+            <a href="#lstm" class="menu">Model LSTM</a>
+            <a href="#cnn" class="menu">Model CNN</a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <p>System Status</p>
+            <h4>🟢 All Systems Operational</h4>
+        </div>
+
+    </aside>
+
+
+    <!-- KONTEN UTAMA -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <div class="top-header">
+
+            <div>
+                <h1 id="judulHalaman">Dashboard</h1>
+                <p>Pemantauan bedengan selada keriting (hidroponik NFT) - Blok A</p>
+            </div>
+
+            <div class="header-control">
+                <span class="status-node">🟢 Node ESP32 terhubung</span>
+
+                <span id="jamDigital">20:00:00</span>
+
+                <button id="modeOtomatis" class="mode-active">
+                    Otomatis
+                </button>
+
+                <button id="modeManual">
+                    Manual
+                </button>
+
+                <button id="tombolTema">
+                    🌗 Tema
+                </button>
+            </div>
+
+        </div>
+
+
+        <!-- ================= DASHBOARD ================= -->
+
+        <section id="dashboard" class="page active">
+
+            <!-- UMUR TANAMAN -->
+            <div class="umur-card">
+
+                <p>Umur tanaman saat ini</p>
+
+                <h1 id="umurTanaman">Hari ke-21</h1>
+
+                <p>Tanam pada: <span id="tanggalTanamText">13 Oktober 2026</span></p>
+
+                <div class="tanggal-control">
+                    <label>Ubah tanggal tanam</label>
+                    <input type="date" id="tanggalTanam" value="2026-10-13">
+                </div>
+
+            </div>
+
+
+            <!-- DASHBOARD SENSOR -->
+            <div class="dashboard-grid">
+
+                <!-- KESEHATAN BEDENGAN -->
+                <div class="card kesehatan-card">
+
+                    <h3>Kesehatan bedengan</h3>
+
+                    <div class="health-circle">
+                        <span id="skorKesehatan">100</span>
+                    </div>
+
+                    <h3>Kondisi sangat baik</h3>
+
+                    <div class="fase-tanaman">
+                        <span>Vegetatif</span>
+                        <span id="hstTanaman">21 HST</span>
+                    </div>
+
+                    <div class="progress">
+                        <div style="width:52%"></div>
+                    </div>
+
+                    <input type="range" id="inputUmur" min="1" max="42" value="21">
+
+                    <p>Daun keriting tumbuh cepat; pastikan nutrisi stabil.</p>
+
+                    <p>Geser untuk mengubah umur tanaman (HST). Panen ideal 35–42 HST.</p>
+
+                </div>
+
+
+                <!-- SUHU -->
+                <div class="card sensor-card">
+
+                    <h3>🌡️ Suhu udara</h3>
+
+                    <h2 id="suhu">22,9 <small>°C</small></h2>
+
+                    <p>Ideal 18,0–24,0 °C</p>
+
+                    <span class="status-ideal">Ideal</span>
+
+                    <canvas id="grafikSuhu"></canvas>
+
+                </div>
+
+
+                <!-- KELEMBAPAN UDARA -->
+                <div class="card sensor-card">
+
+                    <h3>💧 Kelembapan udara</h3>
+
+                    <h2 id="kelembapanUdara">68 <small>%</small></h2>
+
+                    <p>Ideal 60–75 %</p>
+
+                    <span class="status-ideal">Ideal</span>
+
+                    <canvas id="grafikKelembapanUdara"></canvas>
+
+                </div>
+
+
+                <!-- KELEMBAPAN MEDIA -->
+                <div class="card sensor-card">
+
+                    <h3>🌱 Kelembapan media</h3>
+
+                    <h2 id="kelembapan">70 <small>%</small></h2>
+
+                    <p>Ideal 60–80 %</p>
+
+                    <span class="status-ideal" id="kondisi">Ideal</span>
+
+                    <canvas id="grafikKelembapan"></canvas>
+
+                </div>
+
+
+                <!-- PH -->
+                <div class="card sensor-card">
+
+                    <h3>🫧 pH larutan</h3>
+
+                    <h2 id="ph">6,15</h2>
+
+                    <p>Ideal 5,80–6,50</p>
+
+                    <span class="status-ideal">Ideal</span>
+
+                    <canvas id="grafikPH"></canvas>
+
+                </div>
+
+
+                <!-- EC -->
+                <div class="card sensor-card">
+
+                    <h3>⚡ EC nutrisi</h3>
+
+                    <h2 id="ec">1,46 <small>mS/cm</small></h2>
+
+                    <p>Ideal 1,20–1,80 mS/cm</p>
+
+                    <span class="status-ideal">Ideal</span>
+
+                    <canvas id="grafikEC"></canvas>
+
+                </div>
+
+
+                <!-- CAHAYA -->
+                <div class="card sensor-card">
+
+                    <h3>☀️ Intensitas cahaya</h3>
+
+                    <h2 id="cahaya">13.553 <small>lux</small></h2>
+
+                    <p>Ideal 9.000–20.000 lux</p>
+
+                    <span class="status-ideal">Ideal</span>
+
+                    <canvas id="grafikCahaya"></canvas>
+
+                </div>
+
+            </div>
+
+
+            <!-- KONTROL KELEMBAPAN -->
+            <div class="card control-container">
+
+                <h2>⚙️ Simulasi Kelembapan Media</h2>
+
+                <p>Geser untuk mengubah nilai kelembapan.</p>
+
+                <input type="range" id="inputKelembapan" min="0" max="100" value="70">
+
+                <h3>Nilai Kelembapan:
+                    <span id="nilaiKelembapan">70%</span>
+                </h3>
+
+                <p id="pesanKondisi">Kondisi media ideal.</p>
+
+            </div>
+
+
+            <!-- KONTROL POMPA -->
+            <div class="card pump-container">
+
+                <h2>🚿 Kontrol Pompa Air</h2>
+
+                <p>Kontrol sistem penyiraman tanaman.</p>
+
+                <h3 id="statusPompa">Pompa dalam keadaan MATI</h3>
+
+                <button id="tombolPompa" onclick="ubahPompa()">
+                    NYALAKAN POMPA
+                </button>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= MONITORING ================= -->
+
+        <section id="monitoring" class="page">
+
+            <h2>Monitoring Sensor</h2>
+
+            <p>Pemantauan perubahan data sensor secara berkala.</p>
+
+            <div class="monitoring-grid">
+
+                <div class="card">
+                    <h3>🌡️ Suhu udara</h3>
+                    <p>Ideal 18,0–24,0 °C</p>
+                    <h2 id="monitorSuhu">23,8 °C</h2>
+                    <canvas id="chartSuhu"></canvas>
+                </div>
+
+                <div class="card">
+                    <h3>💧 Kelembapan udara</h3>
+                    <p>Ideal 60–75 %</p>
+                    <h2 id="monitorUdara">67 %</h2>
+                    <canvas id="chartUdara"></canvas>
+                </div>
+
+                <div class="card">
+                    <h3>🌱 Kelembapan media</h3>
+                    <p>Ideal 60–80 %</p>
+                    <h2 id="monitorMedia">66 %</h2>
+                    <canvas id="chartMedia"></canvas>
+                </div>
+
+                <div class="card">
+                    <h3>🫧 pH larutan</h3>
+                    <p>Ideal 5,80–6,50</p>
+                    <h2 id="monitorPH">6,27</h2>
+                    <canvas id="chartPH"></canvas>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ EC nutrisi</h3>
+                    <p>Ideal 1,20–1,80 mS/cm</p>
+                    <h2 id="monitorEC">1,35 mS/cm</h2>
+                    <canvas id="chartEC"></canvas>
+                </div>
+
+                <div class="card">
+                    <h3>☀️ Intensitas cahaya</h3>
+                    <p>Ideal 9.000–20.000 lux</p>
+                    <h2 id="monitorCahaya">14.095 lux</h2>
+                    <canvas id="chartCahaya"></canvas>
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= PREDIKSI AI ================= -->
+
+        <section id="prediksi" class="page">
+
+            <div class="card">
+
+                <div class="section-header">
+
+                    <div>
+                        <h2>Prediksi pertumbuhan 4 hari ke depan</h2>
+
+                        <p>
+                            Berdasarkan umur tanaman dan kondisi kesehatan bedengan.
+                        </p>
+                    </div>
+
+                    <span class="panen-badge">
+                        Estimasi panen: HST 42
+                    </span>
+
+                </div>
+
+
+                <div class="prediksi-grid">
+
+                    <div class="prediksi-item">
+                        <p>HST ke-22</p>
+                        <div class="tanaman-icon">🥬</div>
+                        <h2>39,4%</h2>
+                        <div class="progress">
+                            <div style="width:39.4%"></div>
+                        </div>
+                        <span>Masa Pertumbuhan</span>
+                    </div>
+
+                    <div class="prediksi-item">
+                        <p>HST ke-23</p>
+                        <div class="tanaman-icon">🥬</div>
+                        <h2>41,8%</h2>
+                        <div class="progress">
+                            <div style="width:41.8%"></div>
+                        </div>
+                        <span>Masa Pertumbuhan</span>
+                    </div>
+
+                    <div class="prediksi-item">
+                        <p>HST ke-24</p>
+                        <div class="tanaman-icon">🥬</div>
+                        <h2>44,2%</h2>
+                        <div class="progress">
+                            <div style="width:44.2%"></div>
+                        </div>
+                        <span>Masa Pertumbuhan</span>
+                    </div>
+
+                    <div class="prediksi-item">
+                        <p>HST ke-25</p>
+                        <div class="tanaman-icon">🥬</div>
+                        <h2>46,6%</h2>
+                        <div class="progress">
+                            <div style="width:46.6%"></div>
+                        </div>
+                        <span class="mendekati-panen">Mendekati Panen</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h2>Kurva kematangan sampai panen</h2>
+
+                <canvas id="grafikPrediksi"></canvas>
+
+            </div>
+
+
+            <div class="card">
+
+                <h2>Informasi Prediksi Panen</h2>
+
+                <p>Umur tanaman saat ini: <strong id="prediksiUmur">21 HST</strong></p>
+
+                <p>Estimasi panen: <strong>35–42 HST</strong></p>
+
+                <p>Status: <strong>Masa pertumbuhan</strong></p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= MODEL LSTM ================= -->
+
+        <section id="lstm" class="page">
+
+            <div class="lstm-banner">
+
+                <h2>Model LSTM — Klasifikasi Tahap Pertumbuhan</h2>
+
+                <p>
+                    LSTM membaca 6 data sensor berurutan
+                    (sekitar 2 hari terakhir), lalu menebak
+                    tahap pertumbuhan tanaman.
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>Uji cepat tiap tahap perkembangan</h3>
+
+                <div class="lstm-buttons">
+
+                    <button onclick="ujiLSTM(25)">
+                        Uji: Masa Pertumbuhan (ke-25)
+                    </button>
+
+                    <button onclick="ujiLSTM(75)">
+                        Uji: Mendekati Panen (ke-75)
+                    </button>
+
+                    <button onclick="ujiLSTM(100)">
+                        Uji: Siap Panen (ke-100)
+                    </button>
+
+                </div>
+
+
+                <h3>Pembacaan ke-<span id="nilaiLSTM">45</span></h3>
+
+                <input type="range" id="inputLSTM" min="1" max="120" value="45">
+
+                <p id="infoLSTM">
+                    Hari ke-15 · DAP 24 · Jam 16:00
+                    · Pembacaan ke-45 dari 120
+                </p>
+
+
+                <h3>6 pembacaan sensor berurutan yang masuk ke LSTM</h3>
+
+                <div class="table-responsive">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Hari ke-</th>
+                                <th>DAP</th>
+                                <th>Jam</th>
+                                <th>Kelembapan (%)</th>
+                                <th>Suhu (°C)</th>
+                                <th>Kondisi tanah</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tabelLSTM">
+
+                            <tr>
+                                <td>14</td>
+                                <td>23</td>
+                                <td>08:00</td>
+                                <td>62</td>
+                                <td>23,9</td>
+                                <td>Optimal</td>
+                            </tr>
+
+                            <tr>
+                                <td>14</td>
+                                <td>23</td>
+                                <td>12:00</td>
+                                <td>64</td>
+                                <td>29,4</td>
+                                <td>Optimal</td>
+                            </tr>
+
+                            <tr>
+                                <td>14</td>
+                                <td>23</td>
+                                <td>16:00</td>
+                                <td>61</td>
+                                <td>28,1</td>
+                                <td>Optimal</td>
+                            </tr>
+
+                            <tr>
+                                <td>15</td>
+                                <td>24</td>
+                                <td>08:00</td>
+                                <td>62</td>
+                                <td>23,6</td>
+                                <td>Optimal</td>
+                            </tr>
+
+                            <tr>
+                                <td>15</td>
+                                <td>24</td>
+                                <td>12:00</td>
+                                <td>60</td>
+                                <td>30,0</td>
+                                <td>Optimal</td>
+                            </tr>
+
+                            <tr>
+                                <td>15</td>
+                                <td>24</td>
+                                <td>16:00</td>
+                                <td>62</td>
+                                <td>27,4</td>
+                                <td>Optimal</td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="hasil-lstm">
+
+                    <h3>Hasil klasifikasi LSTM</h3>
+
+                    <h2 id="hasilLSTM">Masa Pertumbuhan</h2>
+
+                    <p id="persentaseLSTM">45%</p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= MODEL CNN ================= -->
+
+        <section id="cnn" class="page">
+
+            <div class="cnn-banner">
+
+                <h2>Model CNN — Deteksi Kesiapan Panen dari Foto</h2>
+
+                <p>
+                    CNN mengenali tahap pertumbuhan dari foto,
+                    dilengkapi analisis visual daun: tutupan daun,
+                    kepekatan warna hijau, dan estimasi lebar daun dalam cm.
+                </p>
+
+            </div>
+
+
+            <div class="card harvest-container">
+
+                <h2>Scan foto selada</h2>
+
+                <p>
+                    Unggah foto tanaman untuk memperkirakan tahap
+                    pertumbuhan dan kesiapan panen.
+                </p>
+
+
+                <div class="upload-area">
+
+                    <label for="uploadFoto">
+                        📷 Pilih foto atau ambil dari kamera
+                    </label>
+
+                    <input type="file" id="uploadFoto" accept="image/*">
+
+                    <div class="preview-container">
+
+                        <img id="previewGambar" src="" alt="Preview daun selada">
+
+                    </div>
+
+                    <button id="tombolDeteksi" onclick="deteksiPanen()">
+
+                        DETEKSI KESIAPAN PANEN
+
+                    </button>
+
+                    <h3 id="hasilDeteksi">
+                        Belum ada gambar yang dianalisis
+                    </h3>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>Informasi Model CNN</h3>
+
+                <p>
+                    Sistem ini menyediakan simulasi analisis visual
+                    untuk memperkirakan kesiapan panen selada.
+                </p>
+
+                <p>
+                    Untuk deteksi menggunakan model CNN sungguhan,
+                    diperlukan model terlatih dan backend pemrosesan gambar.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- FOOTER -->
+        <footer>
+            <p>© 2026 SeladaDar - Smart Farming Selada Keriting</p>
+        </footer>
+
+    </main>
+
+
+    <!-- JAVASCRIPT -->
+    <script src="script.js"></script>
+
+</body>
+
+</html>
